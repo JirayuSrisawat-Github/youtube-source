@@ -59,7 +59,16 @@ public class SignatureCipherManager {
   );
 
   private static final Pattern ACTIONS_PATTERN = Pattern.compile(
-      "var\\s+([A-Za-z0-9_]+)\\s*=\\s*\\{\\s*[A-Za-z0-9_]+\\s*:\\s*function\\s*\\([^)]*\\)\\s*\\{[^{}]*(?:\\{[^{}]*}[^{}]*)*}\\s*,\\s*[A-Za-z0-9_]+\\s*:\\s*function\\s*\\([^)]*\\)\\s*\\{[^{}]*(?:\\{[^{}]*}[^{}]*)*}\\s*,\\s*[A-Za-z0-9_]+\\s*:\\s*function\\s*\\([^)]*\\)\\s*\\{[^{}]*(?:\\{[^{}]*}[^{}]*)*}\\s*};");
+          "var\\s+([A-Za-z0-9_]+)\\s*=\\s*\\{\\s*" +
+                  "(?:" +
+                  "[A-Za-z0-9_]+\\s*:\\s*function\\s*\\([^)]*\\)\\s*\\{" +
+                  "(?:[^{}]*+(?:\\{[^{}]*+\\}[^{}]*+)*+)" +
+                  "\\}\\s*,\\s*" +
+                  ")+" +
+                  "[A-Za-z0-9_]+\\s*:\\s*function\\s*\\([^)]*\\)\\s*\\{" +
+                  "(?:[^{}]*+(?:\\{[^{}]*+\\}[^{}]*+)*+)" +
+                  "\\}\\s*\\}\\s*;",
+          Pattern.DOTALL);
 
   private static final Pattern SIG_FUNCTION_PATTERN = Pattern.compile(
       "function(?:\\s+" + VARIABLE_PART + ")?\\((" + VARIABLE_PART + ")\\)\\{" +
@@ -128,7 +137,7 @@ public class SignatureCipherManager {
         dumpProblematicScript(cipherCache.get(playerScript).rawScript, playerScript, "Can't transform s parameter " + signature);
       }
     }
-      
+
 
     if (!DataFormatTools.isNullOrEmpty(nParameter)) {
       try {
